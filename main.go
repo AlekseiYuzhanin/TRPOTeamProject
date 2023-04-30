@@ -47,7 +47,7 @@ func getStudents(w http.ResponseWriter, r *http.Request){
 	rows, err := db.Query(`
 	select student.studentid , student.studentfirstname , student.studentlastname ,
 	student.studentmiddlename , student.studentbirthdate , 
-	studentsgroup.studentsgrouptitle , round(avg(studentgrade.studentgradegrade)) as "Average number" from studentgrade 
+	studentsgroup.studentsgrouptitle , round(avg(studentgrade.studentgradegrade),1) as "Average number" from studentgrade 
 	inner join Student on student.studentid  = studentgrade.studentgradestudentnumber  
 	inner join course on course.coursestudentnumber = student.studentid 
 	inner join studentsgroup on studentsgroup.studentsgroupid = course.coursegroupnumber

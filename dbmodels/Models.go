@@ -23,7 +23,7 @@ type StudentsGroup struct{
 type StudentGrade struct{
 	StudentGradeStudentNumber Student `json:"studentgradestudentnumber"`
 	StudentGradeSubjectNumber Subject `json:"studentgradesubjectnumber"`
-	StudentGrade int `json:"studentgrade"`
+	StudentGrade float64 `json:"studentgrade"`
 	StudentGradeYear int `json:"studentgradeyear"`
 }
 
