@@ -80,7 +80,7 @@ func getStudents(w http.ResponseWriter, r *http.Request){
 			StudentMiddleName: s.StudentMiddleName,
 			StudentBirthDate: s.StudentBirthDate,
 			GroupTitle: g.StudentsGroupTitile,
-			AverageMark: float64(sg.StudentGrade),
+			AverageMark: sg.StudentGrade,
 		}
 		
 		studentmarks = append(studentmarks,studentsmarks)
