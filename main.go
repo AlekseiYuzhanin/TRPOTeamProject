@@ -10,6 +10,16 @@ import (
 	_ "github.com/lib/pq"
 )
 
+type StudentsWithMarks struct{
+	StudentId int `json:"studentid"`
+	StudentFirstName string `json:"studentfirstname"`
+	StudentLastName string `json:"studentlastname"`
+	StudentMiddleName string `json:"studentmiddlename"`
+	StudentBirthDate string `json:"studentbirthdate"`
+	GroupTitle string `json:"grouptitle"`
+	AverageMark float64 `json:"averagemark"`
+}
+
 func dbconn() (db *sql.DB){
 	const (
 		dbDriver = "postgres"
@@ -31,35 +41,104 @@ func dbconn() (db *sql.DB){
 
 func getStudents(w http.ResponseWriter, r *http.Request){
 	db := dbconn()
+
 	defer db.Close()
-	
-	rows, err := db.Query("select studentfirstname,studentlastname,studentmiddlename,studentbirthdate,studententranceyear from student")
+	grouptitle := r.URL.Query().Get("grouptitle")
+	rows, err := db.Query(`
+	select student.studentid , student.studentfirstname , student.studentlastname ,
+	student.studentmiddlename , student.studentbirthdate , 
+	studentsgroup.studentsgrouptitle , round(avg(studentgrade.studentgradegrade)) as "Average number" from studentgrade 
+	inner join Student on student.studentid  = studentgrade.studentgradestudentnumber  
+	inner join course on course.coursestudentnumber = student.studentid 
+	inner join studentsgroup on studentsgroup.studentsgroupid = course.coursegroupnumber
+	where studentsgroup.studentsgrouptitle = $1
+	group by student.studentid , studentsgroup.studentsgrouptitle  
+	order by avg(studentgrade.studentgradegrade);`,grouptitle)
+
  	if err != nil {
   		log.Fatal(err)
  	}
 
  	defer rows.Close()
 
-	students := []dbmodels.Student{}
+	var studentmarks []StudentsWithMarks
 
 	for rows.Next(){
-		s := dbmodels.Student{}
-		err := rows.Scan(&s.StudentFirstName,&s.StudentLastName,&s.StudentMiddleName,&s.StudentBirthDate,&s.StudentEntranceYear)
+		var s dbmodels.Student
+		var g dbmodels.StudentsGroup
+		var sg dbmodels.StudentGrade
+		err := rows.Scan(&s.StudentId,&s.StudentFirstName,&s.StudentLastName,&s.StudentMiddleName,&s.StudentBirthDate,&g.StudentsGroupTitile,&sg.StudentGrade)
 		if err!= nil{
 			fmt.Println(err)
 			continue
 		}
 
-		students = append(students, s)
+		studentsmarks := StudentsWithMarks{
+			StudentId: s.StudentId,
+			StudentFirstName: s.StudentFirstName,
+			StudentLastName: s.StudentLastName,
+			StudentMiddleName: s.StudentMiddleName,
+			StudentBirthDate: s.StudentBirthDate,
+			GroupTitle: g.StudentsGroupTitile,
+			AverageMark: float64(sg.StudentGrade),
+		}
+		
+		studentmarks = append(studentmarks,studentsmarks)
 	}
 
-	json.NewEncoder(w).Encode(students)
+	json.NewEncoder(w).Encode(studentmarks)
+}
+
+func getStudent(w http.ResponseWriter, r*http.Request){
+	db := dbconn()
+ 	defer db.Close()
+
+	id := r.URL.Query().Get("studentid")
+ 	var student dbmodels.Student
+ 	err := db.QueryRow(`select studentid, studentfirstname,studentlastname,
+	studentmiddlename,studentbirthdate,studententranceyear 
+	from student WHERE studentid=$1`, id).Scan(&student.StudentId,&student.StudentFirstName,&student.StudentLastName,&student.StudentMiddleName,&student.StudentBirthDate,&student.StudentEntranceYear)
+ 	
+	if err != nil {
+  	log.Fatal(err)
+ }
+
+ json.NewEncoder(w).Encode(student)
+}
+
+func getGroups(w http.ResponseWriter, r*http.Request){
+	db := dbconn()
+	defer db.Close()
+
+	rows, err := db.Query("select studentsgroupid, studentsgrouptitle from studentsgroup")
+ 	if err != nil {
+  		log.Fatal(err)
+ 	}
+
+ 	defer rows.Close()
+
+	groups := []dbmodels.StudentsGroup{}
+
+	for rows.Next(){
+		g := dbmodels.StudentsGroup{}
+		err := rows.Scan(&g.StudentsGroupId,&g.StudentsGroupTitile)
+		if err!= nil{
+			fmt.Println(err)
+			continue
+		}
+
+		groups = append(groups, g)
+	}
+
+	json.NewEncoder(w).Encode(groups)
 }
 
 
 
 func main(){
 	http.HandleFunc("/students",getStudents)
+	http.HandleFunc("/student",getStudent)
+	http.HandleFunc("/groups",getGroups)
 
 	log.Fatal(http.ListenAndServe(":8080",nil))
 

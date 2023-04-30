@@ -1,5 +1,6 @@
 package dbmodels
 
+
 type Student struct{
 	StudentId int `json:"studentid"`
 	StudentFirstName string `json:"studentfirstname"`
