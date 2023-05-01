@@ -1,0 +1,4 @@
+github.com/distribution/distribution/v3 v3.0.0-20230426173926-29b5e79f8254 h1:Vdz3ZC4Vbyu1j5riart5jLvi49uMXlDLL5Cga8FP9gc=
+github.com/distribution/distribution/v3 v3.0.0-20230426173926-29b5e79f8254/go.mod h1:PVYmlEi2GgkUt4iZ9nk1G1crk81iF8A4ZPFuuP2J3tw=
+github.com/lib/pq v1.10.9 h1:YXG7RB+JIjhP29X+OtkiDnYaXQwpS4JEWq7dtCCRUEw=
+github.com/lib/pq v1.10.9/go.mod h1:AlVN5x4E4T544tWzH6hKfbfQvm3HdbOxrmggDNAPY9o=
