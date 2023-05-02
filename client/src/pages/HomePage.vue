@@ -4,37 +4,49 @@
     <p>Choose group: </p>
     </div>
     <div class="groups-list" v-for="group in groups" :key="group.studentsgroupid">
-      <p @click.stop="checkGroup">{{ group.studentsgrouptitle }}</p>
+      <button @click="checkGroup(group.studentsgrouptitle)">{{ group.studentsgrouptitle }}</button>
     </div>
+  
   </main>
 </template>
 
 <script>
+import StudentsList from './StudentsList.vue'
 import axios from 'axios'
   export default{
-    data(){
-      return{
-        groups : [],
-        groupp : ""
-      }
+    data() {
+        return {
+            groups: [],
+            groupp: ""
+        };
     },
     methods: {
-      checkGroup(){
-        this.groupp = group
-      },
-      async getGroups(){
-        try {
-          const response = await axios.get('http://localhost:8080/groups')
-          this.groups = response.data
-        } catch(e){
-          console.log(e)
-        }
-      }
+        checkGroup(elemName) {
+            console.log('Clicked on ' + elemName)
+        },
+        async getGroups() {
+            try {
+                const response = await axios.get("http://localhost:8080/groups");
+                this.groups = response.data;
+            }
+            catch (e) {
+                console.log(e);
+            }
+        },
+        async getStudents(){
+                try{
+                    const response = await axios.get(`http://localhost:8080/students?grouptitle=${this.group}`) 
+                    console.log(response.data)
+                }catch(e){
+                    console.log(e)
+                }
+            }
     },
-    mounted(){
-      this.getGroups()
-    }
-  }
+    mounted() {
+        this.getGroups();
+    },
+    components: { StudentsList }
+}
 </script>
 
 <style lang="scss" scoped>
