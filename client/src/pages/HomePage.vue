@@ -1,7 +1,10 @@
 <template>
   <main class="main">
-    <div class="groups-list">
-      {{ groups }}
+    <div class="group-list-title">
+    <p>Choose group: </p>
+    </div>
+    <div class="groups-list" v-for="group in groups" :key="group.studentsgroupid">
+     <router-link to="/groups">{{group.studentsgrouptitle}}</router-link>
     </div>
   </main>
 </template>
@@ -17,9 +20,8 @@ import axios from 'axios'
     methods: {
       async getGroups(){
         try {
-          const response = await axios.get("http://localhost:8080/groups")
-          console.log(response.data)
-          this.groups = response.data; 
+          const response = await axios.get('http://localhost:8080/groups')
+          this.groups = response.data
         } catch(e){
           console.log(e)
         }
@@ -32,5 +34,13 @@ import axios from 'axios'
 </script>
 
 <style lang="scss" scoped>
+.group-list-title{
+  font-size: 30px;
+  font-family: 'Times New Roman', Times, serif;
+}
 
+.groups-list{
+  font-size: 30px;
+  margin-left: 40%;
+}
 </style>
