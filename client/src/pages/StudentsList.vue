@@ -2,11 +2,11 @@
     <body class="main">
         <div class="wrapper">
         <div class="student-list" v-for="student in students" :key="student.studentid">
-            <p>{{ student.studentid }}</p>
-            <p>{{ student.studentfirstname }}</p>
-            <p>{{ student.studentlastname }}</p>
-            <p>{{ student.studentmiddlename }}</p>
-            <p>{{ student.studentbirthdate }}</p>
+            {{ student.studentid }}
+            {{ student.studentfirstname }}
+            {{ student.studentlastname }}
+            {{ student.studentmiddlename }}
+            {{ student.studentbirthdate }}
          </div>
         </div>
     </body>
@@ -17,7 +17,7 @@ import axios from 'axios'
     export default{
         data(){
             return{
-                group : '111',
+                group : this.$route.params.id,
                 students: []
             }
         },

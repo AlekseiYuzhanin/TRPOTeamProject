@@ -4,9 +4,8 @@
     <p>Choose group: </p>
     </div>
     <div class="groups-list" v-for="group in groups" :key="group.studentsgroupid">
-      <button @click="checkGroup(group.studentsgrouptitle)">{{ group.studentsgrouptitle }}</button>
-    </div>
-  
+      <router-link  :to="{name: 'StudentsList', params: {id: group.studentsgrouptitle}}">{{ group.studentsgrouptitle }}</router-link>
+    </div>  
   </main>
 </template>
 
@@ -16,14 +15,12 @@ import axios from 'axios'
   export default{
     data() {
         return {
+          productId : 123,
             groups: [],
-            groupp: ""
+            groupp: '611',
         };
     },
     methods: {
-        checkGroup(elemName) {
-            console.log('Clicked on ' + elemName)
-        },
         async getGroups() {
             try {
                 const response = await axios.get("http://localhost:8080/groups");
