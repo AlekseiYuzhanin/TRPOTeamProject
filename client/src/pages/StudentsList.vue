@@ -15,7 +15,7 @@
                     <th>Средний балл</th>
                 </tr>
                     <tr v-for="student in students" :key="student.studentid">
-                        <td>{{ student.studentfirstname }}</td>
+                        <router-link :to="{name: 'sstudent', params: {id: student.studentid}}"><td>{{ student.studentfirstname }}</td></router-link>
                         <td>{{ student.studentlastname }}</td>
                         <td>{{ student.studentmiddlename }}</td>
                         <td>{{ student.studentbirthdate.slice(0,10)}}</td>
@@ -30,6 +30,7 @@
 
 <script>
 import axios from 'axios'
+import StudentProfile from './StudentProfile.vue'
     export default{
         data(){
             return{

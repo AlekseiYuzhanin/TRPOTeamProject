@@ -4,7 +4,7 @@
     <p>Choose group: </p>
     </div>
     <div class="groups-list" v-for="group in groups" :key="group.studentsgroupid">
-      <router-link :to="{name: 'StudentsList', params: {id: group.studentsgrouptitle}}">{{ group.studentsgrouptitle }}</router-link>
+      <p><router-link :to="{name: 'StudentsList', params: {id: group.studentsgrouptitle}}">{{ group.studentsgrouptitle }}</router-link></p>
     </div>  
   </main>
 </template>
