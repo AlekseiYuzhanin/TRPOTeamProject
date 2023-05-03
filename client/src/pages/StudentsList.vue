@@ -15,7 +15,7 @@
                     <th>Средний балл</th>
                 </tr>
                     <tr v-for="student in students" :key="student.studentid">
-                        <router-link :to="{name: 'sstudent', params: {id: student.studentid}}"><td>{{ student.studentfirstname }}</td></router-link>
+                        <router-link class="link" :to="{name: 'sstudent', params: {id: student.studentid}}"><td>{{ student.studentfirstname }}</td></router-link>
                         <td>{{ student.studentlastname }}</td>
                         <td>{{ student.studentmiddlename }}</td>
                         <td>{{ student.studentbirthdate.slice(0,10)}}</td>
@@ -67,12 +67,17 @@ table {
 
 td, th {
   border: 1px solid #dddddd;
-  text-align: left;
+  text-align: center;
   padding: 8px;
 }
 
 tr:nth-child(even) {
   background-color: #dddddd;
+}
+
+.link{
+  text-decoration: none;
+  width: 100%;
 }
 
 </style>

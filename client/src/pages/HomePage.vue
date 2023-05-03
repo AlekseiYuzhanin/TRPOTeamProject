@@ -4,7 +4,7 @@
     <p>Choose group: </p>
     </div>
     <div class="groups-list" v-for="group in groups" :key="group.studentsgroupid">
-      <p><router-link :to="{name: 'StudentsList', params: {id: group.studentsgrouptitle}}">{{ group.studentsgrouptitle }}</router-link></p>
+      <p ><router-link class="link" :to="{name: 'StudentsList', params: {id: group.studentsgrouptitle}}">{{ group.studentsgrouptitle }}</router-link></p>
     </div>  
   </main>
 </template>
@@ -56,5 +56,9 @@ import axios from 'axios'
   flex-direction: column;
   gap: 30px;
   margin-left: 10%;
+}
+
+.link{
+  text-decoration: none;
 }
 </style>
