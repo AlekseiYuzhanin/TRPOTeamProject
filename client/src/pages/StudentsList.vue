@@ -20,7 +20,7 @@
                         <td>{{ student.studentmiddlename }}</td>
                         <td>{{ student.studentbirthdate.slice(0,10)}}</td>
                         <td>{{ student.grouptitle }}</td>
-                        <td>{{ student.averagemark }}</td>
+                        <td>{{ student.averagemark.Float64 }}</td>
                     </tr>
             </table>
     </div>

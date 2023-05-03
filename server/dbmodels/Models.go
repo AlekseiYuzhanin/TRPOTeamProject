@@ -1,5 +1,7 @@
 package dbmodels
 
+import "database/sql"
+
 
 type Student struct{
 	StudentId int `json:"studentid"`
@@ -23,7 +25,7 @@ type StudentsGroup struct{
 type StudentGrade struct{
 	StudentGradeStudentNumber Student `json:"studentgradestudentnumber"`
 	StudentGradeSubjectNumber Subject `json:"studentgradesubjectnumber"`
-	StudentGrade float64 `json:"studentgrade"`
+	StudentGrade sql.NullFloat64 `json:"studentgrade"`
 	StudentGradeYear int `json:"studentgradeyear"`
 }
 

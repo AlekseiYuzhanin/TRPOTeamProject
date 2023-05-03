@@ -18,7 +18,7 @@ type StudentsWithMarks struct {
 	StudentMiddleName string  `json:"studentmiddlename"`
 	StudentBirthDate  string  `json:"studentbirthdate"`
 	GroupTitle        string  `json:"grouptitle"`
-	AverageMark       float64 `json:"averagemark"`
+	AverageMark       sql.NullFloat64 `json:"averagemark"`
 }
 
 type StudentProfile struct{
@@ -30,7 +30,7 @@ type StudentProfile struct{
 	StudentEntranceYear int `json:"studententranceyear"`
 	SubjectTitle string `json:"subjecttitle"`
 	StudentGradeYear int `json:"studentgradeyear"`
-	StudentGradeGrade int `json:"studentgradegrade"`
+	StudentGradeGrade sql.NullFloat64 `json:"studentgradegrade"`
 }
 
 func dbconn() (db *sql.DB) {
@@ -112,28 +112,46 @@ func getStudent(w http.ResponseWriter, r *http.Request) {
 	defer db.Close()
 
 	id := r.URL.Query().Get("studentid")
-	var student dbmodels.Student
-	var subject dbmodels.Subject
-	var studentgrade dbmodels.StudentGrade
 
-	var studentprofile []StudentProfile
+	rows,err:= db.Query(`select student.studentid,student.studentfirstname ,student.studentlastname ,
+		student.studentmiddlename , student.studentbirthdate ,studententranceyear ,subject.subjecttitle ,
+		studentgrade.studentgradeyear, studentgrade.studentgradegrade 
+		from student,studentgrade,subject where studentid = $1
+		and student.studentid = studentgrade.studentgradestudentnumber
+		and subject.subjectid = studentgrade.studentgradesubjectnumber`, id)
 
-	err := db.QueryRow(`select student.studentid,student.studentfirstname ,student.studentlastname ,
-	student.studentmiddlename , student.studentbirthdate ,studententranceyear ,subject.subjecttitle ,
-	studentgrade.studentgradeyear, studentgrade.studentgradegrade 
-	from student,studentgrade,subject where studentid = $1
-	and student.studentid = studentgrade.studentgradestudentnumber
-	and subject.subjectid = studentgrade.studentgradesubjectnumber`, id).Scan(&student.StudentId, &student.StudentFirstName, &student.StudentLastName, &student.StudentMiddleName, &student.StudentBirthDate, &student.StudentEntranceYear,&subject.SubjectTitle,&studentgrade.StudentGradeYear,&studentgrade.StudentGrade)
+		if err!= nil{
+			log.Fatal(err)
+		}
 
-	if err != nil {
-		log.Fatal(err)
-	}
+		defer rows.Close()
 
-	mStudentProfile := StudentProfile{
-		
-	}
+		var studentprofile []StudentProfile
 
-	json.NewEncoder(w).Encode(student)
+		for rows.Next(){
+			var student dbmodels.Student
+			var subject dbmodels.Subject
+			var studentgrade dbmodels.StudentGrade
+			err := rows.Scan(&student.StudentId, &student.StudentFirstName, &student.StudentLastName, &student.StudentMiddleName, &student.StudentBirthDate, &student.StudentEntranceYear,&subject.SubjectTitle,&studentgrade.StudentGradeYear,&studentgrade.StudentGrade)
+			if err!= nil{
+				log.Fatal(err)
+			}
+
+			mStudentProfile := StudentProfile{
+				StudentId: student.StudentId,
+				StudentFirstName: student.StudentFirstName,
+				StudentLastName: student.StudentLastName,
+				StudentMiddleName: student.StudentMiddleName,
+				StudentBirthDate: student.StudentBirthDate,
+				StudentEntranceYear: student.StudentEntranceYear,
+				SubjectTitle: subject.SubjectTitle,
+				StudentGradeYear: studentgrade.StudentGradeYear,
+				StudentGradeGrade: studentgrade.StudentGrade,
+			}
+			studentprofile = append(studentprofile, mStudentProfile)
+		}
+
+	json.NewEncoder(w).Encode(studentprofile)
 }
 
 func getGroups(w http.ResponseWriter, r *http.Request) {
