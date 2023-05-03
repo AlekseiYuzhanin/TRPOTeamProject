@@ -52,12 +52,9 @@ import axios from 'axios'
         mounted(){
             this.getStudents()
         },
-        computed: {
-            formattedDate() {
-                return this.birthdate.slice(0,10)
-    },
+        
   }
-}
+
 </script>
 
 <style lang="scss">

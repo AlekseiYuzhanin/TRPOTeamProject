@@ -21,6 +21,13 @@ type StudentsWithMarks struct {
 	AverageMark       float64 `json:"averagemark"`
 }
 
+type StudentProfile struct{
+	StudentId int `json:"studentid"`
+	SubjectTitle string `json:"subjecttitle"`
+	StudentGradeYear int `json:"studentgradeyear"`
+	StudentGradeGrade int `json:"studentgradegrade"`
+}
+
 func dbconn() (db *sql.DB) {
 	const (
 		dbDriver = "postgres"
@@ -101,12 +108,24 @@ func getStudent(w http.ResponseWriter, r *http.Request) {
 
 	id := r.URL.Query().Get("studentid")
 	var student dbmodels.Student
-	err := db.QueryRow(`select studentid, studentfirstname,studentlastname,
-	studentmiddlename,studentbirthdate,studententranceyear 
-	from student WHERE studentid=$1`, id).Scan(&student.StudentId, &student.StudentFirstName, &student.StudentLastName, &student.StudentMiddleName, &student.StudentBirthDate, &student.StudentEntranceYear)
+	var subject dbmodels.Subject
+	var studentgrade dbmodels.StudentGrade
+
+	var studentprofile []StudentProfile
+
+	err := db.QueryRow(`select student.studentid,student.studentfirstname ,student.studentlastname ,
+	student.studentmiddlename , student.studentbirthdate ,studententranceyear ,subject.subjecttitle ,
+	studentgrade.studentgradeyear, studentgrade.studentgradegrade 
+	from student,studentgrade,subject where studentid = $1
+	and student.studentid = studentgrade.studentgradestudentnumber
+	and subject.subjectid = studentgrade.studentgradesubjectnumber`, id).Scan(&student.StudentId, &student.StudentFirstName, &student.StudentLastName, &student.StudentMiddleName, &student.StudentBirthDate, &student.StudentEntranceYear,&subject.SubjectTitle,&studentgrade.StudentGradeYear,&studentgrade.StudentGrade)
 
 	if err != nil {
 		log.Fatal(err)
+	}
+
+	mStudentProfile := StudentProfile{
+		
 	}
 
 	json.NewEncoder(w).Encode(student)
