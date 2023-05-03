@@ -60,7 +60,7 @@ import axios from 'axios'
 }
 </script>
 
-<style>
+<style lang="scss">
 table {
   font-family: arial, sans-serif;
   border-collapse: collapse;
