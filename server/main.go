@@ -23,6 +23,11 @@ type StudentsWithMarks struct {
 
 type StudentProfile struct{
 	StudentId int `json:"studentid"`
+	StudentFirstName  string  `json:"studentfirstname"`
+	StudentLastName   string  `json:"studentlastname"`
+	StudentMiddleName string  `json:"studentmiddlename"`
+	StudentBirthDate  string  `json:"studentbirthdate"`
+	StudentEntranceYear int `json:"studententranceyear"`
 	SubjectTitle string `json:"subjecttitle"`
 	StudentGradeYear int `json:"studentgradeyear"`
 	StudentGradeGrade int `json:"studentgradegrade"`
