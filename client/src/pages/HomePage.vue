@@ -38,13 +38,23 @@ import axios from 'axios'
 </script>
 
 <style lang="scss" scoped>
+.main{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-left: 40%;
+  gap: 50px;
+}
 .group-list-title{
   font-size: 30px;
   font-family: 'Times New Roman', Times, serif;
+
 }
 
 .groups-list{
   font-size: 30px;
-  margin-left: 40%;
+  flex-direction: column;
+  gap: 30px;
+  margin-left: 10%;
 }
 </style>
