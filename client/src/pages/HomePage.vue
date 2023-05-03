@@ -4,7 +4,7 @@
     <p>Choose group: </p>
     </div>
     <div class="groups-list" v-for="group in groups" :key="group.studentsgroupid">
-      <router-link  :to="{name: 'StudentsList', params: {id: group.studentsgrouptitle}}">{{ group.studentsgrouptitle }}</router-link>
+      <router-link :to="{name: 'StudentsList', params: {id: group.studentsgrouptitle}}">{{ group.studentsgrouptitle }}</router-link>
     </div>  
   </main>
 </template>
@@ -15,9 +15,7 @@ import axios from 'axios'
   export default{
     data() {
         return {
-          productId : 123,
-            groups: [],
-            groupp: '611',
+            groups: []
         };
     },
     methods: {
@@ -30,14 +28,7 @@ import axios from 'axios'
                 console.log(e);
             }
         },
-        async getStudents(){
-                try{
-                    const response = await axios.get(`http://localhost:8080/students?grouptitle=${this.group}`) 
-                    console.log(response.data)
-                }catch(e){
-                    console.log(e)
-                }
-            }
+        
     },
     mounted() {
         this.getGroups();

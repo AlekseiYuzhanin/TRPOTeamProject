@@ -144,6 +144,7 @@ func main() {
 	http.HandleFunc("/student", getStudent)
 	http.HandleFunc("/groups", getGroups)
 
+	fmt.Println("Server starting on port :8080")
 	log.Fatal(http.ListenAndServe(":8080", nil))
 
 }
